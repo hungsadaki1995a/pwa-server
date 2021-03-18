@@ -2,6 +2,7 @@
 const path = require( 'path' );
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
 
@@ -16,7 +17,8 @@ module.exports = {
     devtool: "source-map",
 
     plugins: [
-            new CleanWebpackPlugin(),
+        new webpack.IgnorePlugin(/^pg-native$/),
+        new CleanWebpackPlugin(),
     ],
 
     // output bundles (location)

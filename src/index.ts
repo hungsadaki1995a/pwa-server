@@ -3,6 +3,7 @@
  */
  import express from 'express';
  import cors from 'cors';
+import { albumRouter } from 'router/album.router';
  
  const app = express();
  app.use(cors());
@@ -13,10 +14,10 @@
  const server = app.listen(port, () => {
    console.log(`Listening on port ${port}`);
  });
+ 
 
- app.get('/', function (req, res) {
-         res.send({});
- })
+
+app.use('/album', albumRouter);
  
  
  /**
@@ -43,4 +44,3 @@
    module.hot.accept();
    module.hot.dispose(() => server.close());
  }
- 

@@ -2,6 +2,7 @@
 const path = require( 'path' );
 const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
 
@@ -27,15 +28,7 @@ module.exports = {
     resolve: {
         extensions: [ '.ts', '.js' ],
         alias: {
-            line: path.resolve(__dirname, 'src/line/'),
-            models: path.resolve(__dirname, 'src/common/models/'),
-            helpers: path.resolve(__dirname, 'src/common/helpers/'),
-            enums: path.resolve(__dirname, 'src/common/enums/'),
-            request: path.resolve(__dirname, 'src/web/request/'),
-            notice: path.resolve(__dirname, 'src/web/notice'),
-            middleware: path.resolve(__dirname, 'src/middleware/'),
-            config: path.resolve(__dirname, 'src/config/'),
-
+            router: path.resolve(__dirname, 'src/router/')
         },
     },
 
@@ -53,10 +46,11 @@ module.exports = {
     },
 
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+        new CleanWebpackPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env.PORT': JSON.stringify('3600'),
-            'process.env.WHITELISTED_DOMAINS': JSON.stringify('http://localhost:4200,https://wabackendtempinxs01jems.azurewebsites.net,https://wabackenddraftdevinxs01jems.azurewebsites.net'),
+            'process.env.connectionString': JSON.stringify('http://localhost:4200,https://wabackendtempinxs01jems.azurewebsites.net,https://wabackenddraftdevinxs01jems.azurewebsites.net'),
             'process.env.CHANNEL_ACCESS_TOKEN': JSON.stringify('uZ9Bt64lmwguKPKIe6poY1zDDHQ4kIB8WBACa6HATdAdYOpBtRIcmbsWyrWGeJ6OWiyHtfMkv5SgWW1atmsYA34S5+5LPflz55ynuteioU38SIaC7gxGnlVrXA255cUwklrrnQH4DiBu9MIB/wEjBAdB04t89/1O/w1cDnyilFU=z'),
             'process.env.CHANNEL_SECRET': JSON.stringify('6bca779cc8a65d083cb0f070dd0b575a')
         })

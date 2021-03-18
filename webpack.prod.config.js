@@ -29,15 +29,7 @@ module.exports = {
     resolve: {
         extensions: [ '.ts', '.js' ],
         alias: {
-            line: path.resolve(__dirname, 'src/line/'),
-            models: path.resolve(__dirname, 'src/common/models/'),
-            helpers: path.resolve(__dirname, 'src/common/helpers/'),
-            enums: path.resolve(__dirname, 'src/common/enums/'),
-            request: path.resolve(__dirname, 'src/web/request/'),
-            notice: path.resolve(__dirname, 'src/web/notice/'),
-            middleware: path.resolve(__dirname, 'src/middleware/'),
-            config: path.resolve(__dirname, 'src/config/'),
-
+            router: path.resolve(__dirname, 'src/router/')
         },
     },
 

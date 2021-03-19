@@ -14,7 +14,7 @@ const pool = new Pool({
 albumRouter.get('/', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		const result = await client.query('SELECT * FROM album_category');
+		const result = await client.query('SELECT * FROM album_category ORDER BY id DESC');
 		res.status(constants.HTTP_STATUS_OK).send(result.rows);
 		client.release();
 	} catch (e) {

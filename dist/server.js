@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "e46227c75e28e440ea9e";
+/******/ 	var hotCurrentHash = "a6ab066835b3f4e9789a";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1073,6 +1073,32 @@ albumRouter.post('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["_
         const queryString = `INSERT INTO album_category(name) values(\'${body.name}\')`;
         const result = yield client.query(queryString);
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send({});
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
+albumRouter.get('/:id', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    try {
+        const albumId = req.params.id;
+        const client = yield pool.connect();
+        const queryString = `SELECT * FROM album_category WHERE id = ${albumId}`;
+        const result = yield client.query(queryString);
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(result.rows[0]);
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
+albumRouter.get('/:id/images', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    try {
+        const albumId = req.params.id;
+        const client = yield pool.connect();
+        const queryString = `SELECT * FROM album_images WHERE album_id = ${albumId}`;
+        const result = yield client.query(queryString);
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(result.rows);
         client.release();
     }
     catch (e) {

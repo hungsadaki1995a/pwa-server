@@ -34,3 +34,29 @@ albumRouter.post('/', async (req, res) => {
 		res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
 	}
 })
+
+albumRouter.get('/:id', async (req, res) => {
+	try {
+		const albumId = req.params.id;
+		const client = await pool.connect();
+		const queryString = `SELECT * FROM album_category WHERE id = ${albumId}`;
+		const result = await client.query(queryString);
+		res.status(constants.HTTP_STATUS_OK).send(result.rows[0]);
+		client.release();
+	} catch (e) {
+		res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+	}
+})
+
+albumRouter.get('/:id/images', async (req, res) => {
+	try {
+		const albumId = req.params.id;
+		const client = await pool.connect();
+		const queryString = `SELECT * FROM album_images WHERE album_id = ${albumId}`;
+		const result = await client.query(queryString);
+		res.status(constants.HTTP_STATUS_OK).send(result.rows);
+		client.release();
+	} catch (e) {
+		res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+	}
+})

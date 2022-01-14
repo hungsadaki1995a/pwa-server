@@ -5,7 +5,7 @@ import { constants } from "http2";
 export const albumRouter = express.Router();
 
 const pool = new Pool({
-	connectionString: 'postgres://ohzdvanjcvhgww:f2b54928cdbd5258f3a4e05c7c340d1c8d13a55186cab1a806bd0b089bca98de@ec2-3-214-3-162.compute-1.amazonaws.com:5432/d9dlljd2n92mbj',
+	connectionString: 'postgres://ajoxgdsnxjmihp:2e26b14ceefdabcf3b4e047fedf9fa0c74286bf019c7484a17eae76e3179eed1@ec2-34-206-220-95.compute-1.amazonaws.com:5432/dbiv4s763p8fan',
 	ssl: {
 		rejectUnauthorized: false
 	}
@@ -14,7 +14,7 @@ const pool = new Pool({
 albumRouter.get('/', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		const result = await client.query('SELECT * FROM album_category ORDER BY id DESC');
+		const result = await client.query('SELECT * FROM services ORDER BY id DESC');
 		res.status(constants.HTTP_STATUS_OK).send(result.rows);
 		client.release();
 	} catch (e) {
@@ -53,6 +53,31 @@ albumRouter.get('/:id/images', async (req, res) => {
 		const albumId = req.params.id;
 		const client = await pool.connect();
 		const queryString = `SELECT * FROM album_images WHERE album_id = ${albumId}`;
+		const result = await client.query(queryString);
+		res.status(constants.HTTP_STATUS_OK).send(result.rows);
+		client.release();
+	} catch (e) {
+		res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+	}
+})
+
+albumRouter.post('/:id/upload', async (req, res) => {
+	try {
+		const files = req?.files?.image;
+		const albumId = Number(req.params.id);
+		const values = [];
+		let queryValue = '';
+		if (Array.isArray(files)) {
+			for (const file of files) {
+				const value = `(${file.name}, ${file.data}, ${albumId})`;
+				values.push(value);
+			}
+			queryValue = values.join(',');
+		} else if (files){
+			queryValue = `(\'${files.name}\', ${files.data}, ${albumId})`;
+		}
+		const client = await pool.connect();
+		const queryString = `INSERT INTO album_images(image_name, image, album_id) values ${queryValue}`;
 		const result = await client.query(queryString);
 		res.status(constants.HTTP_STATUS_OK).send(result.rows);
 		client.release();

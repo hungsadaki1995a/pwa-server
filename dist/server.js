@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "a6ab066835b3f4e9789a";
+/******/ 	var hotCurrentHash = "95c862e67b3600086174";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1003,21 +1003,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! cors */ "cors");
 /* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(cors__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var router_album_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! router/album.router */ "./src/router/album.router.ts");
+/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! body-parser */ "body-parser");
+/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(body_parser__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var express_fileupload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! express-fileupload */ "express-fileupload");
+/* harmony import */ var express_fileupload__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(express_fileupload__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var router_services_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! router/services.router */ "./src/router/services.router.ts");
 /**
  * Required External Modules
  */
 
 
 
+
+
 const app = express__WEBPACK_IMPORTED_MODULE_0___default()();
 app.use(cors__WEBPACK_IMPORTED_MODULE_1___default()());
-app.use(express__WEBPACK_IMPORTED_MODULE_0___default.a.json());
+app.use(body_parser__WEBPACK_IMPORTED_MODULE_2___default.a.urlencoded({ extended: false }));
+app.use(body_parser__WEBPACK_IMPORTED_MODULE_2___default.a.json());
+app.use(express_fileupload__WEBPACK_IMPORTED_MODULE_3___default()());
 const port = "3600" || false;
 const server = app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
-app.use('/album', router_album_router__WEBPACK_IMPORTED_MODULE_2__["albumRouter"]);
+app.use('/services', router_services_router__WEBPACK_IMPORTED_MODULE_4__["albumRouter"]);
 if (true) {
     module.hot.accept();
     module.hot.dispose(() => server.close());
@@ -1026,10 +1034,10 @@ if (true) {
 
 /***/ }),
 
-/***/ "./src/router/album.router.ts":
-/*!************************************!*\
-  !*** ./src/router/album.router.ts ***!
-  \************************************/
+/***/ "./src/router/services.router.ts":
+/*!***************************************!*\
+  !*** ./src/router/services.router.ts ***!
+  \***************************************/
 /*! exports provided: albumRouter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1050,7 +1058,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const albumRouter = express__WEBPACK_IMPORTED_MODULE_1___default.a.Router();
 const pool = new pg__WEBPACK_IMPORTED_MODULE_2__["Pool"]({
-    connectionString: 'postgres://ohzdvanjcvhgww:f2b54928cdbd5258f3a4e05c7c340d1c8d13a55186cab1a806bd0b089bca98de@ec2-3-214-3-162.compute-1.amazonaws.com:5432/d9dlljd2n92mbj',
+    connectionString: 'postgres://ajoxgdsnxjmihp:2e26b14ceefdabcf3b4e047fedf9fa0c74286bf019c7484a17eae76e3179eed1@ec2-34-206-220-95.compute-1.amazonaws.com:5432/dbiv4s763p8fan',
     ssl: {
         rejectUnauthorized: false
     }
@@ -1058,7 +1066,7 @@ const pool = new pg__WEBPACK_IMPORTED_MODULE_2__["Pool"]({
 albumRouter.get('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
     try {
         const client = yield pool.connect();
-        const result = yield client.query('SELECT * FROM album_category ORDER BY id DESC');
+        const result = yield client.query('SELECT * FROM services ORDER BY id DESC');
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(result.rows);
         client.release();
     }
@@ -1105,6 +1113,33 @@ albumRouter.get('/:id/images', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODU
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
     }
 }));
+albumRouter.post('/:id/upload', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const files = (_a = req === null || req === void 0 ? void 0 : req.files) === null || _a === void 0 ? void 0 : _a.image;
+        const albumId = Number(req.params.id);
+        const values = [];
+        let queryValue = '';
+        if (Array.isArray(files)) {
+            for (const file of files) {
+                const value = `(${file.name}, ${file.data}, ${albumId})`;
+                values.push(value);
+            }
+            queryValue = values.join(',');
+        }
+        else if (files) {
+            queryValue = `(\'${files.name}\', ${files.data}, ${albumId})`;
+        }
+        const client = yield pool.connect();
+        const queryString = `INSERT INTO album_images(image_name, image, album_id) values ${queryValue}`;
+        const result = yield client.query(queryString);
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(result.rows);
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
 
 
 /***/ }),
@@ -1119,6 +1154,17 @@ albumRouter.get('/:id/images', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODU
 __webpack_require__(/*! webpack/hot/poll?100 */"./node_modules/webpack/hot/poll.js?100");
 module.exports = __webpack_require__(/*! ./src/index.ts */"./src/index.ts");
 
+
+/***/ }),
+
+/***/ "body-parser":
+/*!******************************!*\
+  !*** external "body-parser" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("body-parser");
 
 /***/ }),
 
@@ -1141,6 +1187,17 @@ module.exports = require("cors");
 /***/ (function(module, exports) {
 
 module.exports = require("express");
+
+/***/ }),
+
+/***/ "express-fileupload":
+/*!*************************************!*\
+  !*** external "express-fileupload" ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("express-fileupload");
 
 /***/ }),
 

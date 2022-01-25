@@ -5,24 +5,54 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
-import { albumRouter } from 'router/services.router';
+import { authRouter } from 'router/auth.router';
+import { serviceRouter } from 'router/services.router';
+import multer from 'multer';
+import path from 'path';
+import serveIndex from 'serve-index';
+
+var storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, './public/uploads')
+	},
+	filename: (req, file, cb) => {
+		cb(null, Date.now() + path.extname(file.originalname))
+	}
+});
+
+//will be using this for uplading
+const upload = multer({ storage: storage });
 
 const app = express();
-app.use( cors() );
+app.use(cors());
 
-app.use( bodyParser.urlencoded( { extended: false } ) );
+// app.use( bodyParser.urlencoded( { extended: false } ) );
 
-app.use( bodyParser.json() )
+// app.use( bodyParser.json() )
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.use(fileUpload());
+app.use(express.static('public'));
+app.use('/ftp', express.static('public'), serveIndex('public', { 'icons': true }));
+
+// app.use(fileUpload());
 
 const port = process.env.PORT || 3600;
-const server = app.listen( port, () => {
-	console.log( `Listening on port ${ port }` );
-} );
+const server = app.listen(port, () => {
+	console.log(`Listening on port ${port}`);
+});
 
 
-app.use( '/services', albumRouter );
+app.use('/auth', authRouter);
+app.use('/services', serviceRouter);
+
+app.post('/file-upload', upload.single('upload'), function (req, res) {
+	let fileFullPath = '';
+	if (req.file) {
+		fileFullPath = req.protocol + '://' + req.get('host') + req.file.path.replace('public','')
+	}
+	return res.send({url: fileFullPath});
+})
 
 
 /**
@@ -35,11 +65,11 @@ interface WebpackHotModule {
 		data: any;
 		accept(
 			dependencies: string[],
-			callback?: ( updatedDependencies: ModuleId[] ) => void,
+			callback?: (updatedDependencies: ModuleId[]) => void,
 		): void;
-		accept( dependency: string, callback?: () => void ): void;
-		accept( errHandler?: ( err: Error ) => void ): void;
-		dispose( callback: ( data: any ) => void ): void;
+		accept(dependency: string, callback?: () => void): void;
+		accept(errHandler?: (err: Error) => void): void;
+		dispose(callback: (data: any) => void): void;
 	};
 }
 
@@ -48,5 +78,5 @@ declare const module: WebpackHotModule;
 
 if (module.hot) {
 	module.hot.accept();
-	module.hot.dispose( () => server.close() );
+	module.hot.dispose(() => server.close());
 }

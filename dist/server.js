@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "95c862e67b3600086174";
+/******/ 	var hotCurrentHash = "4146dec9d6ba59651caf";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1003,11 +1003,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! cors */ "cors");
 /* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(cors__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! body-parser */ "body-parser");
-/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(body_parser__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var express_fileupload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! express-fileupload */ "express-fileupload");
-/* harmony import */ var express_fileupload__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(express_fileupload__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var router_services_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! router/services.router */ "./src/router/services.router.ts");
+/* harmony import */ var router_auth_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! router/auth.router */ "./src/router/auth.router.ts");
+/* harmony import */ var router_services_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! router/services.router */ "./src/router/services.router.ts");
+/* harmony import */ var multer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! multer */ "multer");
+/* harmony import */ var multer__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(multer__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! path */ "path");
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var serve_index__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! serve-index */ "serve-index");
+/* harmony import */ var serve_index__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(serve_index__WEBPACK_IMPORTED_MODULE_6__);
 /**
  * Required External Modules
  */
@@ -1016,16 +1019,40 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+var storage = multer__WEBPACK_IMPORTED_MODULE_4___default.a.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/uploads');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path__WEBPACK_IMPORTED_MODULE_5___default.a.extname(file.originalname));
+    }
+});
+//will be using this for uplading
+const upload = multer__WEBPACK_IMPORTED_MODULE_4___default()({ storage: storage });
 const app = express__WEBPACK_IMPORTED_MODULE_0___default()();
 app.use(cors__WEBPACK_IMPORTED_MODULE_1___default()());
-app.use(body_parser__WEBPACK_IMPORTED_MODULE_2___default.a.urlencoded({ extended: false }));
-app.use(body_parser__WEBPACK_IMPORTED_MODULE_2___default.a.json());
-app.use(express_fileupload__WEBPACK_IMPORTED_MODULE_3___default()());
+// app.use( bodyParser.urlencoded( { extended: false } ) );
+// app.use( bodyParser.json() )
+app.use(express__WEBPACK_IMPORTED_MODULE_0___default.a.json());
+app.use(express__WEBPACK_IMPORTED_MODULE_0___default.a.urlencoded({ extended: false }));
+app.use(express__WEBPACK_IMPORTED_MODULE_0___default.a.static('public'));
+app.use('/ftp', express__WEBPACK_IMPORTED_MODULE_0___default.a.static('public'), serve_index__WEBPACK_IMPORTED_MODULE_6___default()('public', { 'icons': true }));
+// app.use(fileUpload());
 const port = "3600" || false;
 const server = app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
-app.use('/services', router_services_router__WEBPACK_IMPORTED_MODULE_4__["albumRouter"]);
+app.use('/auth', router_auth_router__WEBPACK_IMPORTED_MODULE_2__["authRouter"]);
+app.use('/services', router_services_router__WEBPACK_IMPORTED_MODULE_3__["serviceRouter"]);
+app.post('/file-upload', upload.single('upload'), function (req, res) {
+    let fileFullPath = '';
+    if (req.file) {
+        fileFullPath = req.protocol + '://' + req.get('host') + req.file.path.replace('public', '');
+    }
+    return res.send({ url: fileFullPath });
+});
 if (true) {
     module.hot.accept();
     module.hot.dispose(() => server.close());
@@ -1034,16 +1061,16 @@ if (true) {
 
 /***/ }),
 
-/***/ "./src/router/services.router.ts":
-/*!***************************************!*\
-  !*** ./src/router/services.router.ts ***!
-  \***************************************/
-/*! exports provided: albumRouter */
+/***/ "./src/router/auth.router.ts":
+/*!***********************************!*\
+  !*** ./src/router/auth.router.ts ***!
+  \***********************************/
+/*! exports provided: authRouter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "albumRouter", function() { return albumRouter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "authRouter", function() { return authRouter; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "tslib");
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tslib__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! express */ "express");
@@ -1056,14 +1083,60 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const albumRouter = express__WEBPACK_IMPORTED_MODULE_1___default.a.Router();
+const authRouter = express__WEBPACK_IMPORTED_MODULE_1___default.a.Router();
 const pool = new pg__WEBPACK_IMPORTED_MODULE_2__["Pool"]({
     connectionString: 'postgres://ajoxgdsnxjmihp:2e26b14ceefdabcf3b4e047fedf9fa0c74286bf019c7484a17eae76e3179eed1@ec2-34-206-220-95.compute-1.amazonaws.com:5432/dbiv4s763p8fan',
     ssl: {
         rejectUnauthorized: false
     }
 });
-albumRouter.get('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+authRouter.post('/login', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    try {
+        const user = req.body.requestBody;
+        const client = yield pool.connect();
+        const queryString = `SELECT * FROM admin WHERE email = \'${user.email}\' AND password = \'${user.password}\'`;
+        const result = yield client.query(queryString);
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(result.rows[0]);
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
+
+
+/***/ }),
+
+/***/ "./src/router/services.router.ts":
+/*!***************************************!*\
+  !*** ./src/router/services.router.ts ***!
+  \***************************************/
+/*! exports provided: serviceRouter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "serviceRouter", function() { return serviceRouter; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "tslib");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tslib__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var pg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pg */ "pg");
+/* harmony import */ var pg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pg__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var http2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! http2 */ "http2");
+/* harmony import */ var http2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(http2__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+const serviceRouter = express__WEBPACK_IMPORTED_MODULE_1___default.a.Router();
+const pool = new pg__WEBPACK_IMPORTED_MODULE_2__["Pool"]({
+    connectionString: 'postgres://ajoxgdsnxjmihp:2e26b14ceefdabcf3b4e047fedf9fa0c74286bf019c7484a17eae76e3179eed1@ec2-34-206-220-95.compute-1.amazonaws.com:5432/dbiv4s763p8fan',
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+serviceRouter.get('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
     try {
         const client = yield pool.connect();
         const result = yield client.query('SELECT * FROM services ORDER BY id DESC');
@@ -1074,20 +1147,22 @@ albumRouter.get('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
     }
 }));
-albumRouter.post('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+serviceRouter.post('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
     try {
-        const body = req.body;
+        const serviceRequest = req.body;
+        console.log(serviceRequest);
         const client = yield pool.connect();
-        const queryString = `INSERT INTO album_category(name) values(\'${body.name}\')`;
+        const createdAt = new Date().getTime();
+        const queryString = `INSERT INTO services(title, content, primary_image_url, created_time) values(\'${serviceRequest.title}\', \'${serviceRequest.content}\', \'${serviceRequest.primary_image_url}\', \'${createdAt}\')`;
         const result = yield client.query(queryString);
-        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send({});
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send({ result });
         client.release();
     }
     catch (e) {
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
     }
 }));
-albumRouter.get('/:id', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+serviceRouter.get('/:id', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
     try {
         const albumId = req.params.id;
         const client = yield pool.connect();
@@ -1100,7 +1175,7 @@ albumRouter.get('/:id', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__[
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
     }
 }));
-albumRouter.get('/:id/images', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+serviceRouter.get('/:id/images', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
     try {
         const albumId = req.params.id;
         const client = yield pool.connect();
@@ -1113,7 +1188,7 @@ albumRouter.get('/:id/images', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODU
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
     }
 }));
-albumRouter.post('/:id/upload', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+serviceRouter.post('/:id/upload', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const files = (_a = req === null || req === void 0 ? void 0 : req.files) === null || _a === void 0 ? void 0 : _a.image;
@@ -1157,17 +1232,6 @@ module.exports = __webpack_require__(/*! ./src/index.ts */"./src/index.ts");
 
 /***/ }),
 
-/***/ "body-parser":
-/*!******************************!*\
-  !*** external "body-parser" ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("body-parser");
-
-/***/ }),
-
 /***/ "cors":
 /*!***********************!*\
   !*** external "cors" ***!
@@ -1190,17 +1254,6 @@ module.exports = require("express");
 
 /***/ }),
 
-/***/ "express-fileupload":
-/*!*************************************!*\
-  !*** external "express-fileupload" ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("express-fileupload");
-
-/***/ }),
-
 /***/ "http2":
 /*!************************!*\
   !*** external "http2" ***!
@@ -1212,6 +1265,28 @@ module.exports = require("http2");
 
 /***/ }),
 
+/***/ "multer":
+/*!*************************!*\
+  !*** external "multer" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("multer");
+
+/***/ }),
+
+/***/ "path":
+/*!***********************!*\
+  !*** external "path" ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
+
+/***/ }),
+
 /***/ "pg":
 /*!*********************!*\
   !*** external "pg" ***!
@@ -1220,6 +1295,17 @@ module.exports = require("http2");
 /***/ (function(module, exports) {
 
 module.exports = require("pg");
+
+/***/ }),
+
+/***/ "serve-index":
+/*!******************************!*\
+  !*** external "serve-index" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("serve-index");
 
 /***/ }),
 

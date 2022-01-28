@@ -1,3 +1,4 @@
+import { otherServiceRouter } from './router/other-service.router';
 /**
  * Required External Modules
  */
@@ -45,6 +46,7 @@ const server = app.listen(port, () => {
 
 app.use('/auth', authRouter);
 app.use('/services', serviceRouter);
+app.use('/other-services', otherServiceRouter);
 
 app.post('/file-upload', upload.single('upload'), function (req, res) {
 	let fileFullPath = '';

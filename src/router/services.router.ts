@@ -1,6 +1,8 @@
 import express from 'express';
 import { Pool } from 'pg';
 import { constants } from "http2";
+import fs from 'fs';
+import path from 'path';
 
 export const serviceRouter = express.Router();
 
@@ -14,7 +16,7 @@ const pool = new Pool({
 serviceRouter.get('/', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		const result = await client.query('SELECT * FROM services ORDER BY id DESC');
+		const result = await client.query('SELECT * FROM services WHERE other_service_flg = false ORDER BY id DESC ;');
 		res.status(constants.HTTP_STATUS_OK).send(result.rows);
 		client.release();
 	} catch (e) {
@@ -50,13 +52,19 @@ serviceRouter.get('/:id', async (req, res) => {
 	}
 })
 
-serviceRouter.get('/:id/images', async (req, res) => {
+serviceRouter.delete('/:id', async (req, res) => {
 	try {
-		const albumId = req.params.id;
+		const serviceId = req.params.id;
 		const client = await pool.connect();
-		const queryString = `SELECT * FROM album_images WHERE album_id = ${albumId}`;
+		// const serviceGetQuery = `SELECT * FROM services WHERE id = ${serviceId}`;
+		// const services = await client.query(serviceGetQuery);
+		// const service = services.rows[0];
+		// const servicePrimaryImageUrl = service.primary_image_url;
+		// const fileName = servicePrimaryImageUrl.substring(servicePrimaryImageUrl.lastIndexOf('\\')+1);
+		// fs.unlinkSync(path.join(__dirname, 'public/uploads/' + fileName));
+		const queryString = `DELETE FROM services WHERE id = ${serviceId}`;
 		const result = await client.query(queryString);
-		res.status(constants.HTTP_STATUS_OK).send(result.rows);
+		res.status(constants.HTTP_STATUS_OK).send('success');
 		client.release();
 	} catch (e) {
 		res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);

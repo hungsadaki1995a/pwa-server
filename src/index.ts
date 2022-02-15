@@ -11,6 +11,7 @@ import { serviceRouter } from 'router/services.router';
 import multer from 'multer';
 import path from 'path';
 import serveIndex from 'serve-index';
+import { carouselRouter } from 'router/carousel.router';
 
 var storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -47,6 +48,7 @@ const server = app.listen(port, () => {
 app.use('/auth', authRouter);
 app.use('/services', serviceRouter);
 app.use('/other-services', otherServiceRouter);
+app.use('/carousel', carouselRouter);
 
 app.post('/file-upload', upload.single('upload'), function (req, res) {
 	let fileFullPath = '';

@@ -1,3 +1,5 @@
+import { contactRouter } from './router/contact.router';
+import { introduceRouter } from './router/introduce.router';
 import { otherServiceRouter } from './router/other-service.router';
 /**
  * Required External Modules
@@ -49,6 +51,8 @@ app.use('/auth', authRouter);
 app.use('/services', serviceRouter);
 app.use('/other-services', otherServiceRouter);
 app.use('/carousel', carouselRouter);
+app.use('/introduce', introduceRouter);
+app.use('/contact', contactRouter);
 
 app.post('/file-upload', upload.single('upload'), function (req, res) {
 	let fileFullPath = '';

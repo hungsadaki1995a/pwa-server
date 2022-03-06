@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "798e82f712ca3039dd44";
+/******/ 	var hotCurrentHash = "04e26e1b722d48c764a6";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -999,20 +999,24 @@ if (true) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _router_other_service_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./router/other-service.router */ "./src/router/other-service.router.ts");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! cors */ "cors");
-/* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(cors__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var router_auth_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! router/auth.router */ "./src/router/auth.router.ts");
-/* harmony import */ var router_services_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! router/services.router */ "./src/router/services.router.ts");
-/* harmony import */ var multer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! multer */ "multer");
-/* harmony import */ var multer__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(multer__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! path */ "path");
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var serve_index__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! serve-index */ "serve-index");
-/* harmony import */ var serve_index__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(serve_index__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var router_carousel_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! router/carousel.router */ "./src/router/carousel.router.ts");
+/* harmony import */ var _router_contact_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./router/contact.router */ "./src/router/contact.router.ts");
+/* harmony import */ var _router_introduce_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./router/introduce.router */ "./src/router/introduce.router.ts");
+/* harmony import */ var _router_other_service_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router/other-service.router */ "./src/router/other-service.router.ts");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! cors */ "cors");
+/* harmony import */ var cors__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(cors__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var router_auth_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! router/auth.router */ "./src/router/auth.router.ts");
+/* harmony import */ var router_services_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! router/services.router */ "./src/router/services.router.ts");
+/* harmony import */ var multer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! multer */ "multer");
+/* harmony import */ var multer__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(multer__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! path */ "path");
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var serve_index__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! serve-index */ "serve-index");
+/* harmony import */ var serve_index__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(serve_index__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var router_carousel_router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! router/carousel.router */ "./src/router/carousel.router.ts");
+
+
 
 /**
  * Required External Modules
@@ -1025,33 +1029,35 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var storage = multer__WEBPACK_IMPORTED_MODULE_5___default.a.diskStorage({
+var storage = multer__WEBPACK_IMPORTED_MODULE_7___default.a.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './public/uploads');
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path__WEBPACK_IMPORTED_MODULE_6___default.a.extname(file.originalname));
+        cb(null, Date.now() + path__WEBPACK_IMPORTED_MODULE_8___default.a.extname(file.originalname));
     }
 });
 //will be using this for uplading
-const upload = multer__WEBPACK_IMPORTED_MODULE_5___default()({ storage: storage });
-const app = express__WEBPACK_IMPORTED_MODULE_1___default()();
-app.use(cors__WEBPACK_IMPORTED_MODULE_2___default()());
+const upload = multer__WEBPACK_IMPORTED_MODULE_7___default()({ storage: storage });
+const app = express__WEBPACK_IMPORTED_MODULE_3___default()();
+app.use(cors__WEBPACK_IMPORTED_MODULE_4___default()());
 // app.use( bodyParser.urlencoded( { extended: false } ) );
 // app.use( bodyParser.json() )
-app.use(express__WEBPACK_IMPORTED_MODULE_1___default.a.json());
-app.use(express__WEBPACK_IMPORTED_MODULE_1___default.a.urlencoded({ extended: false }));
-app.use(express__WEBPACK_IMPORTED_MODULE_1___default.a.static('public'));
-app.use('/ftp', express__WEBPACK_IMPORTED_MODULE_1___default.a.static('public'), serve_index__WEBPACK_IMPORTED_MODULE_7___default()('public', { 'icons': true }));
+app.use(express__WEBPACK_IMPORTED_MODULE_3___default.a.json());
+app.use(express__WEBPACK_IMPORTED_MODULE_3___default.a.urlencoded({ extended: false }));
+app.use(express__WEBPACK_IMPORTED_MODULE_3___default.a.static('public'));
+app.use('/ftp', express__WEBPACK_IMPORTED_MODULE_3___default.a.static('public'), serve_index__WEBPACK_IMPORTED_MODULE_9___default()('public', { 'icons': true }));
 // app.use(fileUpload());
 const port = "3600" || false;
 const server = app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
-app.use('/auth', router_auth_router__WEBPACK_IMPORTED_MODULE_3__["authRouter"]);
-app.use('/services', router_services_router__WEBPACK_IMPORTED_MODULE_4__["serviceRouter"]);
-app.use('/other-services', _router_other_service_router__WEBPACK_IMPORTED_MODULE_0__["otherServiceRouter"]);
-app.use('/carousel', router_carousel_router__WEBPACK_IMPORTED_MODULE_8__["carouselRouter"]);
+app.use('/auth', router_auth_router__WEBPACK_IMPORTED_MODULE_5__["authRouter"]);
+app.use('/services', router_services_router__WEBPACK_IMPORTED_MODULE_6__["serviceRouter"]);
+app.use('/other-services', _router_other_service_router__WEBPACK_IMPORTED_MODULE_2__["otherServiceRouter"]);
+app.use('/carousel', router_carousel_router__WEBPACK_IMPORTED_MODULE_10__["carouselRouter"]);
+app.use('/introduce', _router_introduce_router__WEBPACK_IMPORTED_MODULE_1__["introduceRouter"]);
+app.use('/contact', _router_contact_router__WEBPACK_IMPORTED_MODULE_0__["contactRouter"]);
 app.post('/file-upload', upload.single('upload'), function (req, res) {
     let fileFullPath = '';
     if (req.file) {
@@ -1194,6 +1200,131 @@ carouselRouter.delete('/:id', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODUL
         const queryString = `DELETE FROM carousel WHERE id = ${serviceId}`;
         const result = yield client.query(queryString);
         res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send('success');
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
+
+
+/***/ }),
+
+/***/ "./src/router/contact.router.ts":
+/*!**************************************!*\
+  !*** ./src/router/contact.router.ts ***!
+  \**************************************/
+/*! exports provided: contactRouter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contactRouter", function() { return contactRouter; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "tslib");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tslib__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var pg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pg */ "pg");
+/* harmony import */ var pg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pg__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var http2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! http2 */ "http2");
+/* harmony import */ var http2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(http2__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+const contactRouter = express__WEBPACK_IMPORTED_MODULE_1___default.a.Router();
+const pool = new pg__WEBPACK_IMPORTED_MODULE_2__["Pool"]({
+    connectionString: 'postgres://ajoxgdsnxjmihp:2e26b14ceefdabcf3b4e047fedf9fa0c74286bf019c7484a17eae76e3179eed1@ec2-34-206-220-95.compute-1.amazonaws.com:5432/dbiv4s763p8fan',
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+contactRouter.get('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    try {
+        const client = yield pool.connect();
+        const result = yield client.query('SELECT * FROM contact');
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(result.rows);
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
+contactRouter.post('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    try {
+        const introduceRequest = req.body;
+        const client = yield pool.connect();
+        let queryString = `INSERT INTO contact(name, phone_number, address, email, content) values(\'${introduceRequest.name}\', \'${introduceRequest.phone_number}\', \'${introduceRequest.address}\', \'${introduceRequest.email}\', \'${introduceRequest.content}\')`;
+        const result = yield client.query(queryString);
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send({ result });
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
+
+
+/***/ }),
+
+/***/ "./src/router/introduce.router.ts":
+/*!****************************************!*\
+  !*** ./src/router/introduce.router.ts ***!
+  \****************************************/
+/*! exports provided: introduceRouter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "introduceRouter", function() { return introduceRouter; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "tslib");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tslib__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var pg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pg */ "pg");
+/* harmony import */ var pg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pg__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var http2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! http2 */ "http2");
+/* harmony import */ var http2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(http2__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+const introduceRouter = express__WEBPACK_IMPORTED_MODULE_1___default.a.Router();
+const pool = new pg__WEBPACK_IMPORTED_MODULE_2__["Pool"]({
+    connectionString: 'postgres://ajoxgdsnxjmihp:2e26b14ceefdabcf3b4e047fedf9fa0c74286bf019c7484a17eae76e3179eed1@ec2-34-206-220-95.compute-1.amazonaws.com:5432/dbiv4s763p8fan',
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+introduceRouter.get('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    try {
+        const client = yield pool.connect();
+        const result = yield client.query('SELECT * FROM introduce');
+        if (result.rows.length > 0) {
+            res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(result.rows[0]);
+        }
+        else {
+            res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send(null);
+        }
+        client.release();
+    }
+    catch (e) {
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_INTERNAL_SERVER_ERROR).send(e.message);
+    }
+}));
+introduceRouter.post('/', (req, res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(void 0, void 0, void 0, function* () {
+    try {
+        const introduceRequest = req.body;
+        const client = yield pool.connect();
+        let queryString = '';
+        if (introduceRequest.id) {
+            queryString = `UPDATE introduce SET content = \'${introduceRequest.content}\' WHERE id = ${introduceRequest.id}`;
+        }
+        else {
+            queryString = `INSERT INTO introduce(content) values(\'${introduceRequest.content}\')`;
+        }
+        const result = yield client.query(queryString);
+        res.status(http2__WEBPACK_IMPORTED_MODULE_3__["constants"].HTTP_STATUS_OK).send({ result });
         client.release();
     }
     catch (e) {
